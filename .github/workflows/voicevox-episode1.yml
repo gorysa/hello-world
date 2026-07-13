@@ -17,26 +17,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Prepare audio tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          ffmpeg -version | head -1
+
       - name: Start official VOICEVOX Engine
         run: |
           docker pull voicevox/voicevox_engine:cpu-latest
           docker run -d --name voicevox -p 127.0.0.1:50021:50021 voicevox/voicevox_engine:cpu-latest
 
       - name: Generate and master episode audio
-        run: python3 voicevox_episode1/synthesize.py
+        id: generate
+        continue-on-error: true
+        run: python3 voicevox_episode1/synthesize.py 2>&1 | tee voicevox_episode1/generation.log
 
-      - name: Upload finished audio
+      - name: Upload audio and recovery files
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: white-room-episode1-voicevox
           path: |
-            voicevox_episode1/output/白い部屋の証人_第1話_VOICEVOX.mp3
-            voicevox_episode1/output/白い部屋の証人_第1話_VOICEVOX.m4a
-            voicevox_episode1/output/白い部屋の証人_第1話_VOICEVOX.wav
-            voicevox_episode1/output/話者・台詞一覧.json
+            voicevox_episode1/output/**
+            voicevox_episode1/generation.log
+          if-no-files-found: warn
           compression-level: 0
           retention-days: 1
 
       - name: Engine logs on failure
-        if: failure()
+        if: steps.generate.outcome == 'failure'
         run: docker logs voicevox || true
+
+      - name: Preserve generation failure status
+        if: steps.generate.outcome == 'failure'
+        run: exit 1
