@@ -1,0 +1,28 @@
+name: Temporary VOICEVOX Generate
+
+on:
+  pull_request:
+    paths:
+      - 'voicevox-job/**'
+      - '.github/workflows/tmp-voicevox-generate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate VOICEVOX audio
+        run: python voicevox-job/generate.py
+      - name: Upload audio
+        uses: actions/upload-artifact@v4
+        with:
+          name: voicevox-audio
+          path: voicevox-output/
+          retention-days: 1
