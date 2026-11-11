@@ -1,0 +1,126 @@
+# 前原ルーキーズ30周年記念映像 構成表
+# ・このファイルだけ編集すれば、映像とPremiere用XMLが再生成されます。
+# ・source が空 / ファイルが無い素材は、自動で絵文字ダミーになります。
+# ・時間は秒、または "4:30" 形式。
+
+project:
+  title: 前原ルーキーズ
+  subtitle: 30周年記念
+  years: 1996 – 2026
+  target_total: "30:00"     # 目標の総尺
+  width: 1920
+  height: 1080
+  fps: 29.97
+  colors:                   # チームカラーが決まったら差し替え
+    main: "#0B2A5B"         # 紺
+    accent: "#E8B400"       # 金
+    text: "#FFFFFF"
+
+# メッセージ前の紹介カードの長さ
+intro_card: 8
+
+sequence:
+  - id: OP
+    type: title
+    emoji: "⚾"
+    heading: 前原ルーキーズ
+    sub: 30th Anniversary  1996 – 2026
+    duration: "1:00"
+
+  - id: HISTORY
+    type: slideshow          # 写真パート：残り時間で自動伸縮
+    flex: true               # true = 総尺が target_total になるよう長さを自動調整
+    min: "1:00"
+    max: "6:00"
+    heading: 30年のあゆみ
+    emoji: "📸"
+    photos:
+      - {caption: 1996年 チーム創設}
+      - {caption: 1996年 創設メンバー集合写真}
+      - {caption: 1998年 初めての公式戦}
+      - {caption: 2001年 初優勝}
+      - {caption: 2004年 夏合宿}
+      - {caption: 2006年 10周年記念式典}
+      - {caption: 2009年 県大会出場}
+      - {caption: 2012年 新グラウンド完成}
+      - {caption: 2014年 卒団式}
+      - {caption: 2016年 20周年記念試合}
+      - {caption: 2019年 地区大会準優勝}
+      - {caption: 2021年 再始動の日}
+      - {caption: 2023年 卒団式}
+      - {caption: 2025年 夏季大会}
+      - {caption: 2026年 現役選手集合}
+
+  - id: MSG1
+    type: message
+    name: 山田 太郎
+    role: 初代監督
+    duration: "5:00"
+    source: ""               # 例: raw/msg_yamada.mp4
+
+  - id: MSG2
+    type: message
+    name: 佐藤 花子
+    role: 平成10年度卒団 OG
+    duration: "4:00"
+    source: ""
+
+  - id: MSG3
+    type: message
+    name: 鈴木 一郎
+    role: 元コーチ
+    duration: "3:30"
+    source: ""
+
+  - id: BRIDGE
+    type: slideshow
+    heading: 思い出の1ページ
+    emoji: "🎞️"
+    seconds_per_photo: 5
+    photos:
+      - {caption: 練習風景}
+      - {caption: 遠征バス}
+      - {caption: 保護者会のみなさん}
+      - {caption: 打ち上げ}
+      - {caption: グラウンド整備}
+      - {caption: 円陣}
+
+  - id: MSG4
+    type: message
+    name: 高橋 次郎
+    role: 平成20年度卒団 OB
+    duration: "5:00"
+    source: ""
+
+  - id: MSG5
+    type: message
+    name: 田中 美咲
+    role: 保護者会 代表
+    duration: "2:30"
+    source: ""
+
+  - id: MSG6
+    type: message
+    name: 伊藤 健太
+    role: 現監督
+    duration: "4:00"
+    source: ""
+
+  - id: ED
+    type: credits
+    emoji: "🏆"
+    heading: これからも 前原ルーキーズ
+    duration: "1:30"
+    credits:
+      - [メッセージ, 山田 太郎 / 佐藤 花子 / 鈴木 一郎]
+      - ["", 高橋 次郎 / 田中 美咲 / 伊藤 健太]
+      - [写真提供, 歴代保護者会のみなさま]
+      - [協力, 前原ルーキーズOB会]
+      - [制作, 30周年記念実行委員会]
+      - ["", ""]
+      - ["", 30年間 ありがとうございました]
+
+bgm:
+  source: ""                 # 空ならダミーBGM（和音）を自動生成
+  volume: 0.6                # 通常時
+  duck_volume: 0.08          # メッセージ中
