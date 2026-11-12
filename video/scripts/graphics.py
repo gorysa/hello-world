@@ -6,8 +6,10 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
-FONT_JP = "/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf"
-FONT_EMOJI = "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf"
+# フォントはリポジトリに同梱 (OS に依存しない)
+FONT_DIR = Path(__file__).resolve().parents[1] / "assets" / "fonts"
+FONT_JP = str(FONT_DIR / "ipag.ttf")
+FONT_EMOJI = str(FONT_DIR / "NotoColorEmoji.ttf")
 
 # ダミー素材の種類ごとの背景色
 KIND_BG = {

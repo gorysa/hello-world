@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from graphics import KIND_BG, Painter, save  # noqa: E402
+from graphics import FONT_JP, KIND_BG, Painter, save  # noqa: E402
 from timeline import VIDEO_DIR, Timeline, build_timeline, tc  # noqa: E402
 import xml_export  # noqa: E402
 
@@ -39,11 +39,11 @@ def run(cmd, **kw):
 
 class Builder:
     def __init__(self, tl: Timeline, out: Path, quality: str):
-        self.tl, self.out = tl, out
+        self.tl, self.out = tl, out.resolve()
         self.W, self.H = tl.width, tl.height
         self.p = Painter(self.W, self.H, tl.project.get("colors", {}))
-        self.gfx = out / "graphics"
-        self.clips = out / "clips"
+        self.gfx = self.out / "graphics"
+        self.clips = self.out / "clips"
         self.enc = (["-c:v", "libx264", "-preset", "veryfast", "-crf", "22"] if quality == "preview"
                     else ["-c:v", "libx264", "-preset", "medium", "-crf", "18"])
         self.enc += ["-pix_fmt", "yuv420p", "-r", FPS_STR, "-video_track_timescale", "30000"]
@@ -110,7 +110,7 @@ class Builder:
                   f"color=c={acc}:s={bw}x{bh}:r={FPS_STR}[bar];"
                   f"[track][bar]overlay=x='-w+w*t/{sec:.3f}':y=0:shortest=1[pb];"
                   f"[0][pb]overlay=x={bx}:y={by},"
-                  f"drawtext=fontfile=/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf:textfile={txt}:"
+                  f"drawtext=fontfile=ipag.ttf:textfile={txt.name}:"
                   f"fontsize={int(40 * H / 1080)}:fontcolor=white:x=w-tw-{int(60 * W / 1920)}:y={int(100 * H / 1080)}")
             cmd = ["ffmpeg", "-y", *still, "-i", png, "-filter_complex", fc]
         elif s.kind == "message":
@@ -129,7 +129,13 @@ class Builder:
             cmd = ["ffmpeg", "-y", *still, "-i", png, *still, "-i", roll, "-filter_complex", fc]
         else:
             raise ValueError(s.kind)
-        run([*map(str, cmd), "-frames:v", str(n), *self.enc, "-an", str(out)])
+        cwd = None
+        if s.kind == "message" and s.is_dummy:
+            cwd = self.clips   # drawtext には相対パスで渡す (Windows の "C:" 対策)
+            font = self.clips / "ipag.ttf"
+            if not font.exists():
+                shutil.copy(FONT_JP, font)
+        run([*map(str, cmd), "-frames:v", str(n), *self.enc, "-an", str(out.resolve())], cwd=cwd)
         return out
 
     def render_clips(self):

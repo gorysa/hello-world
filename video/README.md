@@ -10,10 +10,19 @@
 | `timeline.csv` | タイムコード付き構成表（Excelで開ける） |
 | `contact_sheet.png` | 各パートのサムネイル一覧 |
 
+## ローカルのセットアップ
+
+| | Windows | Mac |
+|---|---|---|
+| Python | python.org から 3.11 以上 | `brew install python` |
+| ffmpeg | `winget install Gyan.FFmpeg` | `brew install ffmpeg` |
+| ライブラリ | `pip install pyyaml pillow` | `pip3 install pyyaml pillow` |
+
+フォントは `assets/fonts/` に同梱済み。最後に `python video/scripts/doctor.py` で全項目 OK を確認。
+
 ## 使い方
 
 ```bash
-pip install pyyaml pillow          # ffmpeg も必要
 python video/scripts/build.py --res 720            # プレビュー（約9分）
 python video/scripts/build.py --res 1080           # 本番画質
 python video/scripts/build.py --only plan          # 尺の計算とCSVだけ（数秒）
